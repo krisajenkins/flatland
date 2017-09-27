@@ -15,7 +15,8 @@ import           Data.Set                     (Set)
 import qualified Data.Set                     as Set
 import           Safe                         (headMay)
 import           Text.PrettyPrint.ANSI.Leijen (Doc, blue, dullred, green,
-                                               putDoc, red, string, white)
+                                               putDoc, red, string, white,
+                                               yellow)
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
@@ -40,19 +41,54 @@ makeLenses ''Point
 type World = Set Point
 
 aWorld :: World
-aWorld =
-  Set.fromList
-    [ Point 1 1 1 '.' White
-    , Point 2 1 1 'x' Red
-    , Point 3 1 1 'x' Red
-    , Point 4 1 1 'x' Red
-    , Point 5 1 1 'x' Red
-    , Point 1 2 1 'y' Blue
-    , Point 1 3 1 'y' Blue
-    , Point 1 4 1 'y' Blue
-    , Point 1 1 2 'z' Green
-    , Point 1 1 3 'z' Green
-    ]
+aWorld = Set.fromList (w <> l <> h)
+  where
+    w =
+      [ Point 1 5 2 'W' Red
+      , Point 1 5 8 'W' Red
+      , Point 1 4 2 'W' Red
+      , Point 1 4 8 'W' Red
+      , Point 1 3 2 'W' Red
+      , Point 1 3 8 'W' Red
+      , Point 1 3 5 'W' Red
+      , Point 1 2 2 'W' Red
+      , Point 1 2 8 'W' Red
+      , Point 1 2 5 'W' Red
+      , Point 1 1 3 'W' Red
+      , Point 1 1 4 'W' Red
+      , Point 1 1 6 'W' Red
+      , Point 1 1 7 'W' Red
+      ]
+    l =
+      [ Point 2 5 1 'L' Blue
+      , Point 2 4 1 'L' Blue
+      , Point 2 3 1 'L' Blue
+      , Point 2 2 1 'L' Blue
+      , Point 2 1 1 'L' Blue
+      , Point 3 1 1 'L' Blue
+      , Point 4 1 1 'L' Blue
+      , Point 5 1 1 'L' Blue
+      , Point 6 1 1 'L' Blue
+      ]
+    h =
+      [ Point 2 1 8 'H' Green
+      , Point 6 1 8 'H' Green
+      , Point 2 1 7 'H' Green
+      , Point 6 1 7 'H' Green
+      , Point 2 1 6 'H' Green
+      , Point 6 1 6 'H' Green
+      , Point 2 1 5 'H' Green
+      , Point 3 1 5 'H' Green
+      , Point 4 1 5 'H' Green
+      , Point 5 1 5 'H' Green
+      , Point 6 1 5 'H' Green
+      , Point 2 1 4 'H' Green
+      , Point 6 1 4 'H' Green
+      , Point 2 1 3 'H' Green
+      , Point 6 1 3 'H' Green
+      , Point 2 1 2 'H' Green
+      , Point 6 1 2 'H' Green
+      ]
 
 renderPoint
   :: (Ord a, Eq a)
@@ -82,7 +118,8 @@ docColor Green = green
 docColor Blue  = blue
 
 renderView title sortLens (axis1Lens, axis2Lens) (axis1Range, axis2Range) = do
-  putStrLn title
+  putDoc $ yellow $ string title
+  putStrLn ""
   mapM_ printRow axis2Range
   where
     printRow y = do
